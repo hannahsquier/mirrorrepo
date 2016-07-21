@@ -11,9 +11,7 @@ class GithubRepos
 
   def initialize()
     Octokit.auto_paginate = true
-
     @client = Octokit::Client.new(access_token: ENV['GIT_API_KEY'])
-
     @user = @client.user
     @repos = @client.repos(@user.login).sort_by { |a| a[:created_at] }.reverse
   end
@@ -45,17 +43,6 @@ class GithubRepos
     end
   end
 
-  def write_repos_to_file
-    File.open("repos.json","w") do |f|
-      f.write(@repos.map {|sawyer| sawyer.to_hash}.to_json)
-    end
-  end
-
-  # def read_json
-  #  File.open("repos.json", 'r') do |f|
-  #    @read_repos = JSON.parse(f.read)
-  #   end
-  # end
 
   def clone_repo(repo)
     `git clone #{repo}`
@@ -90,16 +77,6 @@ class GithubRepos
 end
 
 gh = GithubRepos.new
-# p gh.get_commit_messages
-
-
-
-#{}`git commit --date="some date in iso8601 format" -m="Message"`
- # gh.read_json
-# pp gh.keep_forked_repos
-#:commits_url].gsub('{/sha}', "/#{ENV['GIT_API_KEY']}")
-
-  p dates = gh.get_dates
 gh.create_commits
 
 
